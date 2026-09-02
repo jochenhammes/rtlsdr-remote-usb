@@ -1,0 +1,15 @@
+# Bindet RTL-SDR-Dongles (RTL2832U-basiert) automatisch für USB/IP-Export,
+# sobald sie eingesteckt werden.
+#
+# Bekannte Vendor:Product-Kombinationen für RTL2832U-Dongles:
+#   0bda:2832  RTL2832U (generisch, kein Tuner-EEPROM)
+#   0bda:2838  RTL2832U (Standard, z.B. RTL-SDR Blog V3, NooElec)
+#
+# Installation: siehe install.sh (kopiert diese Datei nach
+# /etc/udev/rules.d/ und führt 'udevadm control --reload-rules' aus).
+
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="2832", \
+  RUN+="/usr/sbin/usbip bind -b $env{BUSNUM}-$env{DEVPATH}"
+
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="2838", \
+  RUN+="/usr/sbin/usbip bind -b $env{BUSNUM}-$env{DEVPATH}"

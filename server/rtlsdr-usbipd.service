@@ -1,0 +1,14 @@
+[Unit]
+Description=USB/IP host daemon (exportiert USB-Geräte, u.a. RTL-SDR)
+After=network.target
+
+[Service]
+# usbipd läuft ohne -D im Vordergrund - genau das will systemd bei Type=simple.
+Type=simple
+# -4: nur IPv4 (falls IPv6 im Netz Probleme macht, sonst entfernen)
+ExecStart=/usr/sbin/usbipd -4
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

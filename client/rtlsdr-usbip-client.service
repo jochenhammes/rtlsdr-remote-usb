@@ -1,0 +1,14 @@
+[Unit]
+Description=USB/IP-Watchdog für entfernten RTL-SDR-Dongle
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/rtlsdr-usbip-client
+ExecStart=/usr/local/bin/rtlsdr-usbip-watchdog
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
