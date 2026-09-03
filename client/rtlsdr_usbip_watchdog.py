@@ -148,9 +148,9 @@ def main() -> int:
     signal.signal(signal.SIGINT, _handle_signal)
 
     backoff = 1.0
+    busid = config.busid
     try:
         while True:
-            busid = config.busid
             try:
                 if busid is None:
                     busid = discover_busid(config.server_host)
@@ -159,6 +159,14 @@ def main() -> int:
                 backoff = 1.0
             except UsbipError as exc:
                 LOG.warning("%s - erneuter Versuch in %.0fs", exc, backoff)
+                # Eine ggf. entdeckte busid war offenbar nicht (mehr) gültig
+                # (z.B. Server hat den Export verloren) - bei fest konfigurierter
+                # RTLSDR_BUSID nicht verwerfen, sonst beim nächsten Versuch neu
+                # discovern statt bei jedem Zyklus (der Server listet ein bereits
+                # attachtes Gerät nicht mehr als verfügbar, das würde sonst jeden
+                # erfolgreichen Attach im nächsten Zyklus wieder "verlieren").
+                if config.busid is None:
+                    busid = None
                 time.sleep(backoff)
                 backoff = min(backoff * 2, config.max_backoff)
                 continue
