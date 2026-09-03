@@ -40,6 +40,20 @@ Dongle zu unterscheiden.
    lesen:** [`docs/SECURITY.md`](docs/SECURITY.md) — USB/IP ist
    standardmäßig unverschlüsselt und ohne Authentifizierung.
 
+## Server testen ohne Linux-Client
+
+Um nach der Server-Installation zu prüfen, ob der Dongle erreichbar und
+exportiert ist — auch von einer Maschine ohne `usbip`/Kernelmodul-Support
+(z.B. macOS) — siehe [`tools/check-export.sh`](tools/check-export.sh):
+
+```bash
+./tools/check-export.sh <server-host-oder-ip>
+```
+
+Das testet nur Netzwerk-Erreichbarkeit und die Export-Liste, nicht den
+echten Attach (dafür wird ein Linux-Client mit `vhci-hcd` benötigt, siehe
+[`client/README.md`](client/README.md)).
+
 ## Voraussetzungen
 
 - Beide Maschinen: Linux mit einem Kernel, der USB/IP unterstützt
@@ -58,7 +72,8 @@ rtlsdr-remote-usb/
 ├── client/     Setup, Watchdog & systemd-Unit für die Maschine, die den
 │               Dongle nutzen soll
 ├── docs/       Troubleshooting & Sicherheitshinweise
-└── tests/      Tests für die Watchdog-Parsing-/Retry-Logik
+├── tests/      Tests für die Watchdog-Parsing-/Retry-Logik
+└── tools/      check-export.sh: Server-Reachability-Check ohne Linux-Client
 ```
 
 ## Lizenz
