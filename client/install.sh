@@ -9,17 +9,21 @@ fi
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-echo "==> Installiere usbip-Tools und Python 3"
-if command -v apt-get &>/dev/null; then
-  apt-get update
-  apt-get install -y usbip python3
-elif command -v dnf &>/dev/null; then
-  dnf install -y usbip-utils python3
-elif command -v pacman &>/dev/null; then
-  pacman -Sy --noconfirm usbutils python
+if command -v usbip &>/dev/null && command -v python3 &>/dev/null; then
+  echo "==> usbip/python3 bereits vorhanden ($(command -v usbip)), Installation übersprungen"
 else
-  echo "Unbekannter Paketmanager – bitte 'usbip' und 'python3' manuell installieren." >&2
-  exit 1
+  echo "==> Installiere usbip-Tools und Python 3"
+  if command -v apt-get &>/dev/null; then
+    apt-get update
+    apt-get install -y usbip python3
+  elif command -v dnf &>/dev/null; then
+    dnf install -y usbip-utils python3
+  elif command -v pacman &>/dev/null; then
+    pacman -Sy --noconfirm usbutils python
+  else
+    echo "Unbekannter Paketmanager – bitte 'usbip' und 'python3' manuell installieren." >&2
+    exit 1
+  fi
 fi
 
 echo "==> Lade Kernelmodul vhci-hcd"

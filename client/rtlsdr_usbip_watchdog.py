@@ -63,11 +63,13 @@ def run_usbip(*args: str) -> subprocess.CompletedProcess:
 
 # 'usbip list -r <host>' Ausgabeformat (Auszug):
 #
-#  - busid 1-1.4 (0bda:2838)
-#     Realtek Semiconductor Corp. : RTL2838 DVB-T
+#  - 127.0.0.1
+#         3-3: Realtek Semiconductor Corp. : RTL2838 DVB-T (0bda:2838)
+#            : /sys/devices/pci0000:00/0000:00:05.0/usb3/3-3
+#            : (Defined at Interface level) (00/00/00)
 #
 _LIST_ENTRY_RE = re.compile(
-    r"^\s*-\s*busid\s+(?P<busid>\S+)\s+\((?P<vidpid>[0-9a-fA-F]{4}:[0-9a-fA-F]{4})\)",
+    r"^\s*(?P<busid>[0-9]+-[0-9.]+):\s.*\((?P<vidpid>[0-9a-fA-F]{4}:[0-9a-fA-F]{4})\)\s*$",
     re.MULTILINE,
 )
 

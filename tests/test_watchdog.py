@@ -13,27 +13,26 @@ USBIP_LIST_OUTPUT = """\
         1-1.4: unknown vendor : unknown product (0bda:2838)
            : /sys/devices/pci0000:00/.../usb1/1-1/1-1.4
            : (Defined at Interface level) (00/00/00)
-
- - busid 1-1.4 (0bda:2838)
-   Realtek Semiconductor Corp. : RTL2838 DVB-T
 """
 
 USBIP_LIST_NO_RTLSDR = """\
 - 192.168.1.50
- - busid 1-1.2 (046d:c52b)
-   Logitech, Inc. : Unifying Receiver
+        1-1.2: Logitech, Inc. : Unifying Receiver (046d:c52b)
+           : /sys/devices/pci0000:00/.../usb1/1-1/1-1.2
+           : (Defined at Interface level) (00/00/00)
 """
 
 USBIP_LIST_MULTIPLE = """\
 - 192.168.1.50
- - busid 1-1.2 (046d:c52b)
-   Logitech, Inc. : Unifying Receiver
-
- - busid 1-1.4 (0bda:2838)
-   Realtek Semiconductor Corp. : RTL2838 DVB-T
-
- - busid 1-1.5 (0bda:2832)
-   Realtek Semiconductor Corp. : RTL2832U
+        1-1.2: Logitech, Inc. : Unifying Receiver (046d:c52b)
+           : /sys/devices/pci0000:00/.../usb1/1-1/1-1.2
+           : (Defined at Interface level) (00/00/00)
+        1-1.4: Realtek Semiconductor Corp. : RTL2838 DVB-T (0bda:2838)
+           : /sys/devices/pci0000:00/.../usb1/1-1/1-1.4
+           : (Defined at Interface level) (00/00/00)
+        1-1.5: Realtek Semiconductor Corp. : RTL2832U (0bda:2832)
+           : /sys/devices/pci0000:00/.../usb1/1-1/1-1.5
+           : (Defined at Interface level) (00/00/00)
 """
 
 
