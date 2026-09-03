@@ -11,18 +11,30 @@ fi
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-echo "==> Installiere usbip-Tools"
-if command -v apt-get &>/dev/null; then
-  apt-get update
-  apt-get install -y usbip
-elif command -v dnf &>/dev/null; then
-  dnf install -y usbip-utils
-elif command -v pacman &>/dev/null; then
-  pacman -Sy --noconfirm usbutils
+if command -v usbip &>/dev/null && command -v usbipd &>/dev/null; then
+  echo "==> usbip/usbipd bereits vorhanden ($(command -v usbip)), Installation übersprungen"
 else
-  echo "Unbekannter Paketmanager – bitte 'usbip' (bzw. 'usbip-utils') manuell installieren." >&2
+  echo "==> Installiere usbip-Tools"
+  if command -v apt-get &>/dev/null; then
+    apt-get update
+    apt-get install -y usbip
+  elif command -v dnf &>/dev/null; then
+    dnf install -y usbip-utils
+  elif command -v pacman &>/dev/null; then
+    pacman -Sy --noconfirm usbutils
+  else
+    echo "Unbekannter Paketmanager – bitte 'usbip' (bzw. 'usbip-utils') manuell installieren." >&2
+    exit 1
+  fi
+fi
+
+if ! command -v usbip &>/dev/null || ! command -v usbipd &>/dev/null; then
+  echo "usbip/usbipd nach der Installation nicht im PATH gefunden." >&2
   exit 1
 fi
+
+USBIP_BIN="$(command -v usbip)"
+USBIPD_BIN="$(command -v usbipd)"
 
 echo "==> Lade Kernelmodul usbip_host"
 modprobe usbip_host
@@ -38,11 +50,15 @@ blacklist rtl2830
 EOF
 
 echo "==> Installiere udev-Regel (automatisches usbip bind beim Einstecken)"
-install -m 644 "${SCRIPT_DIR}/99-rtlsdr-usbip.rules" /etc/udev/rules.d/99-rtlsdr-usbip.rules
+sed "s#/usr/sbin/usbip#${USBIP_BIN}#" "${SCRIPT_DIR}/99-rtlsdr-usbip.rules" \
+  > /etc/udev/rules.d/99-rtlsdr-usbip.rules
+chmod 644 /etc/udev/rules.d/99-rtlsdr-usbip.rules
 udevadm control --reload-rules
 
 echo "==> Installiere systemd-Unit für usbipd"
-install -m 644 "${SCRIPT_DIR}/rtlsdr-usbipd.service" /etc/systemd/system/rtlsdr-usbipd.service
+sed "s#/usr/sbin/usbipd#${USBIPD_BIN}#" "${SCRIPT_DIR}/rtlsdr-usbipd.service" \
+  > /etc/systemd/system/rtlsdr-usbipd.service
+chmod 644 /etc/systemd/system/rtlsdr-usbipd.service
 systemctl daemon-reload
 systemctl enable --now rtlsdr-usbipd.service
 

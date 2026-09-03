@@ -9,7 +9,7 @@
 # /etc/udev/rules.d/ und führt 'udevadm control --reload-rules' aus).
 
 ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="2832", \
-  RUN+="/usr/sbin/usbip bind -b $env{BUSNUM}-$env{DEVPATH}"
+  RUN+="/usr/sbin/usbip bind -b %k"
 
 ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="2838", \
-  RUN+="/usr/sbin/usbip bind -b $env{BUSNUM}-$env{DEVPATH}"
+  RUN+="/usr/sbin/usbip bind -b %k"
